@@ -2,12 +2,15 @@
 A simple script that demonstrates how we classify textual data with sklearn.
 
 """
+
 from sklearn.feature_extraction.text import CountVectorizer
 
 from sklearn.metrics import accuracy_score
 
 import csv
 from sklearn.feature_extraction.text import TfidfVectorizer
+import nltk
+nltk.download('stopwords')
 from nltk.corpus import stopwords
 from sklearn import svm
 import string
@@ -21,7 +24,8 @@ def read_data(fname, labl = "none", flag = 'Train'):
     stopword_list = stopwords.words('english')
     words = []
     labels = []
-    fin=open(fname, 'r',encoding = "ISO-8859-1")
+    fin = open(fname, 'r', encoding="ISO-8859-1")
+
     if flag == 'Train':
 
         for w in fin.read().lower().split():
@@ -95,12 +99,10 @@ test_data_cumm_list = []
 test_label_cumm_list = []
 
 
-
-for i in ['comp', 'sport', 'politics', 'rec']:
+for idx, i in enumerate(['comp', 'sport', 'politics', 'rec']):
     labelIndPair[count] = i
     train_data, train_label = read_data(os.path.join("data/training/", i, "{}.txt".format(i)),
-                                        labl=count)
-    count += 1
+                                        labl=idx)
 
     for word in train_data:
         train_data_cumm_list.append(word)
@@ -110,16 +112,22 @@ for i in ['comp', 'sport', 'politics', 'rec']:
 
 train_vector, vectorizer = vectorize_train_data(data_list=train_data_cumm_list, train_test_flag="train")
 
-predicted_label = []
+predicted_group_label = []
+actual_group_label = []
 
-for i in ['comp', 'sport', 'politics', 'rec']:
-    labelIndPair[count] = i
+for idx, i in enumerate(['comp', 'sport', 'politics', 'rec']):
 
-    test_data = read_data(os.path.join("data/training/", i, "{}.txt".format(i)), flag='test')
-    test_vector = vectorize_test_data(test_data_list=test_data, vectorizer=vectorizer)
-    predicted_labels = classify(test_vector=test_vector, train_vector=train_vector, train_labels=train_label, strategy="linear")
+    ith_test_data_dir = os.path.join("data/testing/", i)
 
-    predicted_label.append(max(predicted_labels))
+    for root, dirs, files in os.walk(ith_test_data_dir):
+        if len(files) > 0:
+            for test_file in files:
+                test_data = read_data(test_file, flag='test')
+                test_vector = vectorize_test_data(test_data_list=test_data, vectorizer=vectorizer)
+                predicted_labels = classify(test_vector=test_vector, train_vector=train_vector, train_labels=train_label, strategy="linear")
+                predicted_group = max(predicted_labels)
+                predicted_group_label.append(predicted_group)
+                actual_group_label.append(idx)
 
-test_label = [0, 1, 2, 3]
-print("Accuracy: {}".format(sum(predicted_label == test_label)/4.0))
+
+print("Accuracy: {}".format(sum(predicted_group_label == actual_group_label)/len(predicted_group_label)))

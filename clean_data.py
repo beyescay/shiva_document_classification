@@ -7,8 +7,9 @@ class DataCleaning:
     def __init__(self, path_to_20_newsgroups_dir):
         self.path_to_20_newsgroups_dir = path_to_20_newsgroups_dir
         data_dir = self.create_training_and_testing_data_set()
+        training_data_dir = os.path.join(data_dir, "training")
         self.remove_header_lines(data_dir)
-        self.merge_and_clean_data(data_dir)
+        self.merge_and_clean_training_data(training_data_dir)
 
     def create_training_and_testing_data_set(self):
         os.makedirs(os.path.join(os.getcwd(), "data", "training"))
@@ -70,8 +71,8 @@ class DataCleaning:
 
                     os.remove(file_name)
 
-    def merge_and_clean_data(self, data_directory):
-        for root, dir, files in os.walk(data_directory):
+    def merge_and_clean_training_data(self, training_data_directory):
+        for root, dir, files in os.walk(training_data_directory):
             if len(files) > 0:
                 merged_file_name_to_write = os.path.join(root, "{}.txt".format(os.path.basename(root)))
 
@@ -87,10 +88,9 @@ class DataCleaning:
 
                 SH.copy(merged_file_name_to_write, os.path.join(root, "..", "{}.txt".format(os.path.basename(root))))
 
-        for root, dirs, files in os.walk(data_directory):
+        for root, dirs, files in os.walk(training_data_directory):
             if len(files) > 0:
                 for dir in dirs:
-                    print dir
                     SH.rmtree(os.path.join(root, dir))
 
                 merged_file_name_to_write = os.path.join(root, "{}.txt".format(os.path.basename(root)))
@@ -108,4 +108,4 @@ class DataCleaning:
 
 
 if __name__ == "__main__":
-    DataCleaning("/home/sarath/Documents/Shiva/20_newsgroups")
+    DataCleaning("../20_newsgroups")

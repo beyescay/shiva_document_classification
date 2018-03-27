@@ -12,6 +12,10 @@ class DataCleaning:
         self.merge_and_clean_training_data(training_data_dir)
 
     def create_training_and_testing_data_set(self):
+
+        if os.path.exists(os.path.join(os.getcwd(), "data")):
+            SH.rmtree(os.path.join(os.getcwd(), "data"))
+            
         os.makedirs(os.path.join(os.getcwd(), "data", "training"))
         os.makedirs(os.path.join(os.getcwd(), "data", "testing"))
 
@@ -28,8 +32,9 @@ class DataCleaning:
 
         data_directories = glob.glob(os.path.join(self.path_to_20_newsgroups_dir, "*"))
 
+        print("\nClassifying the news groups into training and testing data sets...\n")
         for data_dir in data_directories:
-            print("Current new group folder: {}".format(data_dir))
+            print("Classifying: {}".format(data_dir))
 
             news_group_folder_name = os.path.basename(data_dir)
 
@@ -48,13 +53,18 @@ class DataCleaning:
                             continue
                         copy_tree(data_dir, os.path.join(train_data_folder, train_key_word, news_group_folder_name))
 
+        print("\nFinished classifying the data set\n")
         return os.path.join(os.getcwd(), "data")
 
     def remove_header_lines(self, data_directory):
+
+        print("\nRemoving header lines from all data articles...\n")
+
         for root, dir, files in os.walk(data_directory):
             if len(files) > 0:
                 for file_basename in files:
                     file_name = os.path.join(root, file_basename)
+                    print("Removing {}".format(file_name))
                     file_name_to_write = os.path.join(root, file_basename + ".txt")
                     with open(file_name, 'r') as file_reader:
                         lines = file_reader.readlines()
@@ -70,14 +80,21 @@ class DataCleaning:
                                 file_writer.write("{}\n".format(line.strip()))
 
                     os.remove(file_name)
+        print("\nFinished removing header lines from all data articles.\n")
 
     def merge_and_clean_training_data(self, training_data_directory):
+
+        print("\nMerging and removing unnecessary files from training data...\n")
+
         for root, dir, files in os.walk(training_data_directory):
             if len(files) > 0:
+
                 merged_file_name_to_write = os.path.join(root, "{}.txt".format(os.path.basename(root)))
 
                 for file_basename in files:
+
                     file_name = os.path.join(root, file_basename)
+                    print("Merging {}".format(file_name))
 
                     with open(file_name, 'r') as file_reader:
                         lines = file_reader.readlines()
@@ -97,6 +114,7 @@ class DataCleaning:
 
                 for file_basename in files:
                     file_name = os.path.join(root, file_basename)
+                    print("Removing {}".format(file_name))
                     with open(file_name, 'r') as file_reader:
                         lines = file_reader.readlines()
 
@@ -105,6 +123,8 @@ class DataCleaning:
                             file_writer.write("{}\n".format(line.strip()))
 
                     os.remove(file_name)
+
+        print("\nFinished merging and removing unnecessary files from training data.\n")
 
 
 if __name__ == "__main__":

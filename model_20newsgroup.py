@@ -83,9 +83,11 @@ def classify(test_vector,train_vector,train_labels,strategy='linear'):
 
 
 
-
-for i in ['comp', 'sport', 'politics', 'rec']:
-    train_data,train_label = read_data("./shiva_document_classification/data/training/" + i +".txt", labl = i)
+labelIndPair = {}
+count = 0
+for i in ['comp', 'sports', 'politics', 'rec']:
+    labelIndPair[i] = count
+    train_data,train_label = read_data("./shiva_document_classification/data/training/" + i +".txt", labl = labelIndPair)
 
 test_data = read_data("./shiva_document_classification/data/training/test.txt",flag = 'test')
 

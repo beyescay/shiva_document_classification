@@ -14,26 +14,26 @@ import string
 import os
 
 
-def read_data(fname, labl="none", flag='Train'):
+def read_data(fname, labl = "none", flag = 'Train'):
     """
     Reads and outputs in as text, label value.
     """
-
+    stopword_list = stopwords.words('english')
     words = []
     labels = []
+    fin=open(fname, 'r',encoding = "ISO-8859-1")
     if flag == 'Train':
-        fin = open(fname, 'r')
 
         for w in fin.read().lower().split():
-            words.append(w.lower().strip(string.punctuation))
-            labels.append(str(labl))
+            if w not in stopword_list:
+                words.append(w.lower())    
+                labels.append(str(labl))
         fin.close()
-        return words, labels
+        return words,labels
     else:
-        fin = open(fname, 'r')
 
         for w in fin.read().lower().split():
-            words.append(w.lower().strip(string.punctuation))
+            words.append(w.lower().strip(string.punctuation))  
         fin.close()
         return words
 
@@ -93,6 +93,8 @@ train_label_cumm_list = []
 
 test_data_cumm_list = []
 test_label_cumm_list = []
+
+
 
 for i in ['comp', 'sport', 'politics', 'rec']:
     labelIndPair[count] = i

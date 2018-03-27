@@ -15,7 +15,7 @@ from nltk.corpus import stopwords
 from sklearn import svm
 import string
 import os
-
+from io import open
 
 def read_data(fname, labl = "none", flag = 'Train'):
     """
@@ -122,7 +122,8 @@ for idx, i in enumerate(['comp', 'sport', 'politics', 'rec']):
     for root, dirs, files in os.walk(ith_test_data_dir):
         if len(files) > 0:
             for test_file in files:
-                test_data = read_data(test_file, flag='test')
+                test_file_path = os.path.join(root, test_file)
+                test_data = read_data(test_file_path, flag='test')
                 test_vector = vectorize_test_data(test_data_list=test_data, vectorizer=vectorizer)
                 predicted_labels = classify(test_vector=test_vector, train_vector=train_vector, train_labels=train_label, strategy="linear")
                 predicted_group = max(predicted_labels)

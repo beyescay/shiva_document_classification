@@ -1,7 +1,0 @@
-If you have access to telnet, contact nyx.cs.du.edu.  It's a public access
-Unix system, completly free, and all you need to for access is a verifiable
-form of ID (I think he requires a notarized copy of a picture, or a check, or
-some such).
---
-=kcochran@nyx.cs.du.edu | B(0-4) c- d- e++ f- g++ k(+) m r(-) s++(+) t | TSAKC=
-=My thoughts, my posts, my ideas, my responsibility, my beer, my pizza.  OK???=
